@@ -389,115 +389,6 @@
             
               
                 
-                <a class="post-title-link" href="/2019/05/17/基于libLAS库读取LAS格式点云数1据/" itemprop="url">
-                  未命名
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2019-05-17T19:42:56+08:00" content="2019-05-17">
-              2019-05-17
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-             <span id="/2019/05/17/基于libLAS库读取LAS格式点云数1据/" class="leancloud_visitors" data-flag-title>
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="1-示例代码："><a href="#1-示例代码：" class="headerlink" title="1.示例代码："></a>1.示例代码：</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;liblas/liblas.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/io/io.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/io/pcd_io.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/point_types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/visualization/pcl_visualizer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/visualization/common/common.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//打开LAS格式点云文件</span></span><br><span class="line">	<span class="built_in">std</span>::<span class="function">ifstream <span class="title">ifs</span><span class="params">(<span class="string">"高速公路.las"</span>, <span class="built_in">std</span>::ios::in | <span class="built_in">std</span>::ios::binary)</span></span>; </span><br><span class="line">	liblas::ReaderFactory f;</span><br><span class="line">	liblas::Reader reader = f.CreateWithStream(ifs); </span><br><span class="line"></span><br><span class="line">	<span class="comment">//读取LAS文件信息头</span></span><br><span class="line">	liblas::Header <span class="keyword">const</span>&amp; header = reader.GetHeader();</span><br><span class="line">	<span class="keyword">double</span> maxX = header.GetMaxX();</span><br><span class="line">	<span class="keyword">double</span> minX = header.GetMinX();</span><br><span class="line">	<span class="keyword">double</span> maxY = header.GetMaxY();</span><br><span class="line">	<span class="keyword">double</span> minY = header.GetMinY();</span><br><span class="line">	<span class="keyword">double</span> maxZ = header.GetMaxZ();</span><br><span class="line">	<span class="keyword">double</span> minZ = header.GetMinZ();</span><br><span class="line">	<span class="keyword">int</span> nbPoints = header.GetPointRecordsCount();</span><br><span class="line">	<span class="built_in">string</span> signature = header.GetFileSignature();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"maxX: "</span> &lt;&lt; maxX &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"minX: "</span> &lt;&lt; minX &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"maxY: "</span> &lt;&lt; maxY &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"minY: "</span> &lt;&lt; minY &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"maxZ: "</span> &lt;&lt; maxZ &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"minZ: "</span> &lt;&lt; minZ &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"点个数: "</span> &lt;&lt; maxX &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"signature: "</span> &lt;&lt; signature &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">	pcl::PointCloud&lt;pcl::PointXYZRGB&gt; cloud;</span><br><span class="line">	cloud.width = nbPoints;	</span><br><span class="line">	cloud.height = <span class="number">1</span>;</span><br><span class="line">	cloud.is_dense = <span class="literal">false</span>;</span><br><span class="line">	cloud.points.resize(cloud.width * cloud.height);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">uint16_t</span> r1, g1, b1;</span><br><span class="line">	<span class="keyword">int</span> r2, g2, b2;</span><br><span class="line">	<span class="keyword">uint32_t</span> rgb;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//读取点云坐标和色彩信息</span></span><br><span class="line">	<span class="keyword">while</span> (reader.ReadNextPoint())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// 获取las数据的x，y，z信息</span></span><br><span class="line">		cloud.points[i].x = reader.GetPoint().GetX();</span><br><span class="line">		cloud.points[i].y = reader.GetPoint().GetY();</span><br><span class="line">		cloud.points[i].z = reader.GetPoint().GetZ();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 获取las数据的r，g，b信息</span></span><br><span class="line">		r1 = reader.GetPoint().GetColor().GetRed();</span><br><span class="line">		g1 = reader.GetPoint().GetColor().GetGreen();</span><br><span class="line">		b1 = reader.GetPoint().GetColor().GetBlue();</span><br><span class="line">		r2 = <span class="built_in">ceil</span>(((<span class="keyword">float</span>)r1 / <span class="number">65536</span>)*(<span class="keyword">float</span>)<span class="number">256</span>);</span><br><span class="line">		g2 = <span class="built_in">ceil</span>(((<span class="keyword">float</span>)g1 / <span class="number">65536</span>)*(<span class="keyword">float</span>)<span class="number">256</span>);</span><br><span class="line">		b2 = <span class="built_in">ceil</span>(((<span class="keyword">float</span>)b1 / <span class="number">65536</span>)*(<span class="keyword">float</span>)<span class="number">256</span>);</span><br><span class="line">		rgb = ((<span class="keyword">int</span>)r2) &lt;&lt; <span class="number">16</span> | ((<span class="keyword">int</span>)g2) &lt;&lt; <span class="number">8</span> | ((<span class="keyword">int</span>)b2);</span><br><span class="line">		cloud.points[i].rgb = *<span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">float</span>*&gt;(&amp;rgb);</span><br><span class="line">	</span><br><span class="line">		i++;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//显示彩色点云</span></span><br><span class="line">	boost::<span class="built_in">shared_ptr</span>&lt;pcl::visualization::PCLVisualizer&gt; viewer(<span class="keyword">new</span> pcl::visualization::PCLVisualizer(<span class="string">"3D Viewer"</span>));</span><br><span class="line">	viewer-&gt;setBackgroundColor(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>);</span><br><span class="line">	viewer-&gt;addPointCloud(cloud.makeShared(), <span class="string">"clound"</span>);</span><br><span class="line">	<span class="keyword">while</span> (!viewer-&gt;wasStopped())</span><br><span class="line">	&#123;</span><br><span class="line">		viewer-&gt;spinOnce(<span class="number">100</span>);</span><br><span class="line">		boost::this_thread::sleep(boost::posix_time::microseconds(<span class="number">100000</span>));</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//输出pcd格式点云</span></span><br><span class="line">	pcl::io::savePCDFileASCII(<span class="string">"高速公路.pcd"</span>, cloud);</span><br><span class="line">	</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">	<span class="keyword">return</span> (<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="2-实验结果："><a href="#2-实验结果：" class="headerlink" title="2.实验结果："></a>2.实验结果：</h4><p><img src="https://img-blog.csdnimg.cn/20190420225449517.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzIyMTcwODc1,size_16,color_FFFFFF,t_70" alt="读取las点云并显示"></p>
-<h4 id="3-备注："><a href="#3-备注：" class="headerlink" title="3.备注："></a>3.备注：</h4><p>1).参考：<a href="https://github.com/LiveStockShapeAnalysis/Point-Cloud-Processing-example" target="_blank" rel="noopener">点云库PCL从入门到精通 书中配套案例</a>（该链接中第三章目录下含有编译好的libLAS库，可直接下载使用）。<br>2).依赖库：PCL1.8、libLAS。</p>
-
-          
-        
-      
-    </div>
-
-	<div>
-      
-    </div>
-	
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2019/05/17/txt点云转pcd点云并显示/" itemprop="url">
                   txt点云转pcd点云并显示
                 </a>
@@ -1501,6 +1392,134 @@
 
 
     
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/12/04/PCL系列1——读入和输出pcd格式点云文件/" itemprop="url">
+                  PCL系列1——读入和输出pcd格式点云文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-12-04T11:15:34+08:00" content="2018-12-04">
+              2018-12-04
+            </time>
+          </span>
+
+          
+            <span class="post-category">
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/PCL点云库系列/" itemprop="url" rel="index">
+                    <span itemprop="name">PCL点云库系列</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/12/04/PCL系列1——读入和输出pcd格式点云文件/" class="leancloud_visitors" data-flag-title="PCL系列1——读入和输出pcd格式点云文件">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>读入和输出pcd格式点云文件<br></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/12/04/PCL系列1——读入和输出pcd格式点云文件/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+	<div>
+      
+    </div>
+	
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1545,7 +1564,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">23</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
