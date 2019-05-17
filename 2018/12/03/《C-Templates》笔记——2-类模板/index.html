@@ -1,0 +1,808 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="函数模板,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="An's blog" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1">
+
+
+
+
+
+
+<meta name="description" content="1.类模板Stack的实现类模板的声明和函数模板的声明相似，下面是一个类模板Stack的例子，这个类的类型是Stack,其中T是模板参数。然而，当时用类名而不是类的类型时，就应该只用Stack；比如，指定类的名称、类的构造函数、析构函数时。总结如下：">
+<meta name="keywords" content="函数模板">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《C++Templates》笔记———2.类模板">
+<meta property="og:url" content="http://anyaojun.github.io/2018/12/03/《C-Templates》笔记——2-类模板/index.html">
+<meta property="og:site_name" content="An&#39;s blog">
+<meta property="og:description" content="1.类模板Stack的实现类模板的声明和函数模板的声明相似，下面是一个类模板Stack的例子，这个类的类型是Stack,其中T是模板参数。然而，当时用类名而不是类的类型时，就应该只用Stack；比如，指定类的名称、类的构造函数、析构函数时。总结如下：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-03T11:59:01.511Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《C++Templates》笔记———2.类模板">
+<meta name="twitter:description" content="1.类模板Stack的实现类模板的声明和函数模板的声明相似，下面是一个类模板Stack的例子，这个类的类型是Stack,其中T是模板参数。然而，当时用类名而不是类的类型时，就应该只用Stack；比如，指定类的名称、类的构造函数、析构函数时。总结如下：">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 《C++Templates》笔记———2.类模板 | An's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3b9d0d4f53b6704ac974d9a98b5471f9";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">An's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">非宁静不以致远</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                《C++Templates》笔记———2.类模板
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-12-03T19:54:54+08:00" content="2018-12-03">
+              2018-12-03
+            </time>
+          </span>
+
+          
+            <span class="post-category">
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/《C-Templates》/" itemprop="url" rel="index">
+                    <span itemprop="name">《C++ Templates》</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2018/12/03/《C-Templates》笔记——2-类模板/" class="leancloud_visitors" data-flag-title="《C++Templates》笔记———2.类模板">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="1-类模板Stack的实现"><a href="#1-类模板Stack的实现" class="headerlink" title="1.类模板Stack的实现"></a>1.类模板Stack的实现</h4><p>类模板的声明和函数模板的声明相似，下面是一个类模板Stack的例子，这个类的类型是Stack<t>,其中T是模板参数。然而，当时用类名而不是类的类型时，就应该只用Stack；比如，指定类的名称、类的构造函数、析构函数时。总结如下：</t></p>
+<a id="more"></a>
+<ul>
+<li>和普通类的声明相似，先在类声明前加一行template <typename t>，然后将类声明中的数据类型换成虚拟类型参数T。</typename></li>
+</ul>
+<ul>
+<li>类模板的成员函数在类模板外定义时必须指定成函数模板，且需要使用这个类模板的完整类型限定符Stack<t>::。</t></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;stdexcept&gt;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt;</span><br><span class="line">class Stack&#123;</span><br><span class="line">private:</span><br><span class="line">	std::vector&lt;T&gt; elems; //存储元素的容器</span><br><span class="line">public:</span><br><span class="line">	void push(T const&amp;); //压入元素</span><br><span class="line">	void pop(); //弹出元素</span><br><span class="line">	T top() const; //返回栈顶元素</span><br><span class="line">	bool empty() const &#123; //返回栈是否为空</span><br><span class="line">		return elems.empty();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt;</span><br><span class="line">void Stack&lt;T&gt;::push(T const&amp; elem)</span><br><span class="line">&#123;</span><br><span class="line">	elems.push_back(elem);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt;</span><br><span class="line">void Stack&lt;T&gt;::pop()</span><br><span class="line">&#123;</span><br><span class="line">	if (elems.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		throw std::out_of_range(&quot;Stack&lt;T&gt;::pop(): empty stack&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	elems.pop_back(); //删除最后一个元素</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt;</span><br><span class="line">T Stack&lt;T&gt;::top() const</span><br><span class="line">&#123;</span><br><span class="line">	if (elems.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		throw std::out_of_range(&quot;Stack&lt;T&gt;::pop(): empty stack&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	return elems.back();  //返回最后一个元素的拷贝</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-类模板Stack的使用"><a href="#2-类模板Stack的使用" class="headerlink" title="2.类模板Stack的使用"></a>2.类模板Stack的使用</h4><p>类模板定义对象时形式为：类模板名&lt;实际类型&gt; 对象名或类模板名&lt;实际类型&gt; 对象名(实参表列)。例如，Stack<int>  intStack。</int></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Stack&lt;int&gt;          intStack;      //元素类型为int的栈</span><br><span class="line">Stack&lt;std::string&gt;  stringStack;   //元素类型为字符串的栈</span><br><span class="line"></span><br><span class="line">//使用int栈</span><br><span class="line">intStack.push(7);</span><br><span class="line">intStack.push(&apos;a&apos;);</span><br><span class="line">std::cout &lt;&lt; intStack.top() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">//使用string栈</span><br><span class="line">stringStack.push(&quot;chdayj&quot;);</span><br><span class="line">std::cout &lt;&lt; stringStack.top() &lt;&lt; std::endl;</span><br><span class="line">stringStack.pop();</span><br></pre></td></tr></table></figure>
+<p>同时，模板实参可以为任何类型： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Stack&lt;float*&gt; floatStrStack;      //元素为浮点型指针的栈</span><br><span class="line">Stack&lt;Stack&lt;int&gt; &gt; intStackStack; //元素为int栈的栈</span><br></pre></td></tr></table></figure>
+<p>注意，两个靠在一起的模板尖括号(即&gt;) 之间要留一个空格；否则，编译器会误认为你在使用operator&gt;&gt;,从而导致语法错误。 </p>
+<h4 id="3-类模板的特化"><a href="#3-类模板的特化" class="headerlink" title="3.类模板的特化"></a>3.类模板的特化</h4><p>因为类模板中的定义不一定适用于所有数据类型，所以针对此类型应该重新定义，即所谓类模板的特化。如果要特化一个类模板，自然要特化此类模板所有的成员函数。</p>
+<h5 id="3-1-全特化"><a href="#3-1-全特化" class="headerlink" title="3.1.全特化"></a>3.1.全特化</h5><p>特化的类上面应该加着templlate&lt;&gt;，并且特化后的类的类型应该将T换成具体的数据类型，比如int，string等。同时，每个成员函数都必须重新定义为普通函数。下面是一个用std::string特化Stack&lt;&gt;的完整例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;deque&gt;</span><br><span class="line">#include &lt;stdexcept&gt;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line"></span><br><span class="line">template&lt;&gt;</span><br><span class="line">class Stack&lt;std::string&gt;&#123;</span><br><span class="line">private:</span><br><span class="line">	std::deque&lt;std::string&gt; elems; //存储元素的容器</span><br><span class="line">public:</span><br><span class="line">	void push(std::string const&amp;); //压入元素</span><br><span class="line">	void pop(); //弹出元素</span><br><span class="line">	std::string top() const; //返回栈顶元素</span><br><span class="line">	bool empty() const &#123; //返回栈是否为空</span><br><span class="line">		return elems.empty();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">void Stack&lt;std::string&gt;::push(std::string const&amp; elem)</span><br><span class="line">&#123;</span><br><span class="line">	elems.push_back(elem);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void Stack&lt;std::string&gt;::pop()</span><br><span class="line">&#123;</span><br><span class="line">	if (elems.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		throw std::out_of_range(&quot;Stack&lt;&lt;std::string&gt;&gt;::pop(): empty stack&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	elems.pop_back(); //删除最后一个元素</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">std::string Stack&lt;std::string&gt;::top() const</span><br><span class="line">&#123;</span><br><span class="line">	if (elems.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		throw std::out_of_range(&quot;Stack&lt;&lt;std::string&gt;&gt;::pop(): empty stack&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	return elems.back();  //返回最后一个元素的拷贝</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的例子中用deque而不是vector，说明：特化的实现可以和基本类模板的实现完全不同。</p>
+<h5 id="3-2-局部特化"><a href="#3-2-局部特化" class="headerlink" title="3.2.局部特化"></a>3.2.局部特化</h5><p>可以在特定的情况下指定类模板的特定实现，并且部分模板参数依然必须有用户来定义。例如类模板：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T1, typename T2&gt;</span><br><span class="line">class MyClass&#123;</span><br><span class="line">...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以有以下几种局部特化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//1.局部特化：两个模板参数具有相同的类型</span><br><span class="line">template &lt;typename T&gt;</span><br><span class="line">class MyClass&lt;T, T&gt;&#123;</span><br><span class="line">...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//2.局部特化：第2个模板参数类型为int</span><br><span class="line">template &lt;typename T&gt;</span><br><span class="line">class MyClass&lt;T, int&gt;&#123;</span><br><span class="line">...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//3.局部特化：两个模板参数都为指针类型</span><br><span class="line">template &lt;typename T1, typename T2&gt;</span><br><span class="line">class MyClass&lt;T1*, T2*&gt;&#123;</span><br><span class="line">...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>下面的例子展示各种声明会使用哪个模板：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MyClass&lt;int,float&gt;   mif;     //使用MyClass&lt;T1,T2&gt;</span><br><span class="line">MyClass&lt;float,float&gt; mFf;     //使用MyClass&lt;T,T&gt;</span><br><span class="line">MyClass&lt;float,int&gt;   mfi;     //使用MyClass&lt;T,int&gt;</span><br><span class="line">MyClass&lt;int*,float*&gt;   mp;    //使用MyClass&lt;T1*,T2*&gt;</span><br></pre></td></tr></table></figure>
+<p>如果有多个局部特化同等程度地匹配某个声明，那么该声明就具有二义性：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MyClass&lt;int,int&gt;    m;     //ERROR:同时匹配MyClass&lt;T,T&gt;和MyClass&lt;T,int&gt;</span><br><span class="line">MyClass&lt;int*,int*&gt;  m;     //ERROR:同时匹配MyClass&lt;T,T&gt;和MyClass&lt;T1*,T2*&gt;</span><br></pre></td></tr></table></figure>
+<p>为了解决例子2中二义性，你可以另外提供一个指向相同类型指针的特化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T&gt;</span><br><span class="line">class MyClass&lt;T*, T*&gt;&#123;</span><br><span class="line">...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="4-缺省模板实参"><a href="#4-缺省模板实参" class="headerlink" title="4.缺省模板实参"></a>4.缺省模板实参</h4><p>我们上面例子中的类模板Stack&lt;&gt;是通过C++标准库的vector&lt;&gt;来实现的；因此，我们不需要亲自实现内存管理、拷贝构造函数和赋值运算符。同时，类模板还可以为模板参数定义缺省值，这些值称为缺省模板实参。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;stdexcept&gt;</span><br><span class="line"></span><br><span class="line">template &lt;typename T, typename CONT = std::vector&lt;T&gt; &gt;</span><br><span class="line">class Stack</span><br><span class="line">&#123;</span><br><span class="line">private:</span><br><span class="line">	CONT elems; //存储元素的容器</span><br><span class="line"></span><br><span class="line">public:</span><br><span class="line">	void push(T const&amp;); //压入元素</span><br><span class="line">	void pop(); //弹出元素</span><br><span class="line">	T top() const; //返回栈顶元素</span><br><span class="line">	bool empty() const &#123; //返回栈是否为空</span><br><span class="line">		return elems.empty();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">template &lt;typename T, typename CONT&gt;</span><br><span class="line">void Stack&lt;T, CONT&gt;::push(T const&amp; elem)</span><br><span class="line">&#123;</span><br><span class="line">	elems.push_back(elem);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template &lt;typename T, typename CONT&gt;</span><br><span class="line">void Stack&lt;T, CONT&gt;::pop()</span><br><span class="line">&#123;</span><br><span class="line">	if (elems.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		throw std::out_of_range(&quot;Stack&lt;T, CONT&gt;::pop(): empty stack&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	elems.pop_back(); //删除最后一个元素</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template &lt;typename T, typename CONT&gt;</span><br><span class="line">T Stack&lt;T, CONT&gt;::top() const</span><br><span class="line">&#123;</span><br><span class="line">	if (elems.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		throw std::out_of_range(&quot;Stack&lt;T, CONT&gt;::pop(): empty stack&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	return elems.back();  //返回最后一个元素的拷贝</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，上面的类模板有两个模板参数，因此每个成员函数的定义都必须具有这两个参数。我们仍然可以像前面的例子使用这个栈，就是说只传递第一个类型实参给这个类模板，将会利用vector来管理stack的元素。使用方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//int栈</span><br><span class="line">Stack&lt;int&gt;          intStack;      </span><br><span class="line"></span><br><span class="line">//double栈,使用std::deque来管理元素</span><br><span class="line">Stack&lt;double,std::deque&lt;double&gt; &gt;  dblStack;</span><br></pre></td></tr></table></figure>
+<p><strong>参考：</strong></p>
+<p><strong>《C++Templates》</strong></p>
+
+      
+    </div>
+
+	<div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+	
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/函数模板/" rel="tag"><i class="fa fa-tag"></i>函数模板</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/01/《C-Templates》笔记——1-函数模板/" rel="next" title="《C++ Templates》笔记——1.函数模板">
+                <i class="fa fa-chevron-left"></i> 《C++ Templates》笔记——1.函数模板
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/03/《C-Templates》笔记——3-非类型模板参数/" rel="prev" title="《C++Templates》笔记——3.非类型模板参数">
+                《C++Templates》笔记——3.非类型模板参数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+     <div class="comments" id="comments">
+       
+     </div>
+   
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="药菌">
+          <p class="site-author-name" itemprop="name">药菌</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/anyaojun" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2920860511" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-类模板Stack的实现"><span class="nav-number">1.</span> <span class="nav-text">1.类模板Stack的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-类模板Stack的使用"><span class="nav-number">2.</span> <span class="nav-text">2.类模板Stack的使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-类模板的特化"><span class="nav-number">3.</span> <span class="nav-text">3.类模板的特化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-全特化"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.全特化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-局部特化"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.局部特化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-缺省模板实参"><span class="nav-number">4.</span> <span class="nav-text">4.缺省模板实参</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">药菌</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;您是第<span id="busuanzi_value_site_uv"></span>个小伙伴
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("226Gwh0aJiSP2aawUEGx7u2N-gzGzoHsz", "V7uwQqdUcrV71r7HHnXiPcaw");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+  
+  
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+</body>
+</html>
